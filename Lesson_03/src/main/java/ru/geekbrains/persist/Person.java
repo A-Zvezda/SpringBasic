@@ -1,13 +1,11 @@
-package ru.geekbrains.product;
-
-import ru.geekbrains.persist.Contact;
+package ru.geekbrains.persist;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-public class Client {
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +21,19 @@ public class Client {
     private LocalDate birthday;
 
     @OneToMany(
-            mappedBy = "client",
+            mappedBy = "person",
             cascade = CascadeType.ALL
     )
-    @Transient
-    private List<ClientsOrders> order;
+    private List<Contact> contacts;
 
-    public Client() {
+    public Person() {
     }
 
-    public Client(String firstName, String lastName, LocalDate birthday) {
+    public Person(String firstName, String lastName, LocalDate birthday, List<Contact> contacts) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
-        // this.order = order;
+        this.contacts = contacts;
     }
 
     public Long getId() {
@@ -71,12 +68,12 @@ public class Client {
         this.birthday = birthday;
     }
 
-    public List<ClientsOrders> getOrder() {
-        return order;
+    public List<Contact> getContacts() {
+        return contacts;
     }
 
-    public void setOrder(List<ClientsOrders> order) {
-        this.order = order;
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 
     @Override
@@ -86,18 +83,7 @@ public class Client {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
-                ", orders=" + order +
+                ", contacts=" + contacts +
                 '}';
-    }
-
-    public String printInfo() {
-        return "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthday=" + birthday;
-    }
-
-    public String getFullName() {
-        return firstName + " " + lastName;
     }
 }

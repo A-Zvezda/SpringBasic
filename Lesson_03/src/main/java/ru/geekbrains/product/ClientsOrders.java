@@ -2,9 +2,10 @@ package ru.geekbrains.product;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-public class Orders {
+public class ClientsOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,15 +25,19 @@ public class Orders {
     @ManyToOne
     private Product product;
 
-    public Orders(Client client, Product product, BigDecimal quantity) {
+    @Column
+    private LocalDate orderDate;
+
+    public ClientsOrders(Client client, Product product, BigDecimal quantity,LocalDate orderDate) {
         this.quantity = quantity;
         this.cost = product.getPrice().multiply(this.quantity);
         this.price = product.getPrice();
         this.client = client;
         this.product = product;
+        this.orderDate = orderDate;
     }
 
-    public Orders() {
+    public ClientsOrders() {
     }
 
     public Long getId() {
@@ -81,5 +86,27 @@ public class Orders {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public String printInfo() {
+        return "id=" + id +
+                ", OrderDate='" + orderDate + '\'' +
+                ", clientID='" + client.getId() + '\'' +
+                ", client='" + client.getFullName() + '\'' +
+                ", productID='" + product.getId() + '\'' +
+                ", productTitle='" + product.getTitle() + '\'' +
+                ", productPrice='" + product.getPrice() + '\'' +
+                ", orderPrice='" + price + '\'' +
+                ", orderQuantity='" + quantity + '\'' +
+                ", orderCost=" + cost;
+
     }
 }
