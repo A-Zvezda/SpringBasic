@@ -16,6 +16,7 @@ import ru.geekbrains.persist.Product;
 import ru.geekbrains.service.ProductService;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Random;
 
 @Controller
@@ -36,8 +37,15 @@ public class ProductController {
 //    }
     @GetMapping
     public String allProducts(Model model) {
-        Random objGenerator = new Random();
-        model.addAttribute("products", productService.getAllProducts());
+        List<Product> productList = productService.getAllProducts();
+        if (productList.size() <= 20 ) {
+            Random objGenerator = new Random();
+            for (int i = productList.size(); i <=20 ; i++) {
+                Product product = new Product("product" + i, new BigDecimal(objGenerator.nextInt(100)));
+                productService.insert(product);
+            }
+        }
+        model.addAttribute("products", productList);
         return "products";
     }
 
@@ -48,11 +56,28 @@ public class ProductController {
     }
 
     @GetMapping(params = {"minPrice","maxPrice"})
-    public String findById(Model model,@RequestParam(name = "minPrice") BigDecimal minPrice, BigDecimal maxPrice) {
-        model.addAttribute("products", productService.findByPrice(minPrice,maxPrice));
+    public String findByMaxMinPrice(Model model,@RequestParam(name = "minPrice") BigDecimal minPrice, @RequestParam(name = "maxPrice") BigDecimal maxPrice) {
+        if ( maxPrice != null & minPrice != null) {
+            model.addAttribute("products", productService.findByPriceMinMax(minPrice, maxPrice));
+        } else if (minPrice != null) {
+            model.addAttribute("products", productService.findByPriceMin(minPrice));
+        } else if (maxPrice != null ) {
+            model.addAttribute("products", productService.findByPriceMax(maxPrice));
+        } else {
+            model.addAttribute("products", productService.getAllProducts());
+        }
         return "products";
     }
-
+    @GetMapping(params = {"minPrice"})
+    public String findByMinPrice(Model model,@RequestParam(name = "minPrice") BigDecimal minPrice) {
+        model.addAttribute("products", productService.findByPriceMin(minPrice));
+        return "products";
+    }
+    @GetMapping(params = {"maxPrice"})
+    public String findByMaxPrice(Model model,@RequestParam(name = "maxPrice") BigDecimal maxPrice) {
+        model.addAttribute("products", productService.findByPriceMax(maxPrice));
+        return "products";
+    }
 
     @GetMapping("/form")
     public String formProduct(Model model) {

@@ -12,6 +12,13 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("from Product p where p.cost between :minPrice and :maxPrice")
-    List<Product> findByPrice(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice")BigDecimal maxPrice);
+    List<Product> findByPriceMinMax(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice")BigDecimal maxPrice);
+
+    @Query("from Product p where p.cost < :minPrice")
+    List<Product> findByPriceMin(@Param("minPrice") BigDecimal minPrice);
+
+    @Query("from Product p where p.cost > :maxPrice")
+    List<Product> findByPriceMax(@Param("maxPrice") BigDecimal minPrice);
+
 
 }

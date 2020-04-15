@@ -41,8 +41,16 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findByPrice(BigDecimal minPrice, BigDecimal maxPrice) {
-        return productRepository.findByPrice(minPrice,maxPrice);
+    public List<Product> findByPriceMinMax(BigDecimal minPrice, BigDecimal maxPrice) {
+        return productRepository.findByPriceMinMax(minPrice,maxPrice);
+    }
+    @Transactional(readOnly = true)
+    public List<Product> findByPriceMin(BigDecimal minPrice) {
+        return productRepository.findByPriceMin(minPrice);
+    }
+    @Transactional(readOnly = true)
+    public List<Product> findByPriceMax(BigDecimal maxPrice) {
+        return productRepository.findByPriceMax(maxPrice);
     }
 
 
