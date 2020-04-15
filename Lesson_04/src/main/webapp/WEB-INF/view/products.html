@@ -2,9 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/resources/style.css}">
     <title>products</title>
 </head>
 <body>
+<nav th:replace="fragments/navbar.html :: navbar"/>
+
 <h1>Products list</h1>
 
 <a th:href="@{/products/form}">Create pruduct</a>
@@ -22,15 +25,24 @@
     </tr>
 </table>
 
-<form th:action="@{/products}"  method="get">
-    <p>id:</p>
-    <p><input type="text" name = "id" id = "id"></p>
-    <button type="submit">Find</button>
+<!--<form th:action="@{/products}"  method="get">-->
+<!--    <p>id:</p>-->
+<!--    <p><input type="text" name = "id" id = "id"></p>-->
+<!--    <button type="submit">Find</button>-->
+<!--</form>-->
+
+<form method="get" th:action="@{/products}">
+    <label for="minPrice">Min price</label><input type="number" id="minPrice" name="minPrice">
+    <label for="maxPrice">Max price</label><input type="number" id="maxPrice" name="maxPrice">
+    <button type="submit">Apply</button>
 </form>
+
 
 <form th:action="@{/products}"  method="get">
     <button type="submit">Reset filter</button>
 </form>
+
+
 
 </body>
 </html>

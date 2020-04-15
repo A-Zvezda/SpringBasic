@@ -1,4 +1,4 @@
-package ru.geekbrains.product;
+package ru.geekbrains.persist;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column
     private String title;
     @Column
@@ -19,7 +19,7 @@ public class Product {
     public Product() {
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -31,7 +31,7 @@ public class Product {
         return cost;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
