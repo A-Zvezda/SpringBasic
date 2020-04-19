@@ -54,10 +54,10 @@ public class ProductService {
             return productRepository.findAllByCostBetween(min.get(), max.get(), pageable);
         }
         if (min.isPresent()) {
-            return productRepository.findAllByCostGreaterThanEqual(min.get(), pageable);
+            return productRepository.findAllByCostLessThanEqual(min.get(), pageable);
         }
         if (max.isPresent()) {
-            return productRepository.findAllByCostLessThanEqual(max.get(), pageable);
+            return productRepository.findAllByCostGreaterThanEqual(max.get(), pageable);
         }
         return productRepository.findAll(pageable);
     }

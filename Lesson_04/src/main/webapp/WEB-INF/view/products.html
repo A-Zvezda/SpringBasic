@@ -54,7 +54,7 @@
                    th:classappend="${num == productsPage.number + 1} ? 'active'"
                    th:href="@{/products(page=${num}, size=${productsPage.size}, minPrice=${minPrice}, maxPrice=${maxPrice})}">[[${num}]]</a>
 
-                <a th:href="@{/products(page=${productsPage.totalPages}, size=${productsPage.size}, minAge=${minPrice}, maxAge=${maxPrice})}">&raquo;</a>
+                <a th:href="@{/products(page=${productsPage.totalPages}, size=${productsPage.size}, minPrice=${minPrice}, maxPrice=${maxPrice})}">&raquo;</a>
             </div>
         </div>
         <footer th:replace="fragments/footer.html :: footer"/>

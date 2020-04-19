@@ -13,7 +13,7 @@
 
         <form th:action="@{/products/form_add}" th:object="${product}" method="post">
             <p>ID:</p>
-            <p><input type="text" th:field="*{id}"></p>
+            <p><input type="text" th:field="*{id}" readonly></p>
             <p>Title:</p>
             <p><input type="text" th:field="*{title}"></p>
             <p>Cost:</p>
