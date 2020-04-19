@@ -2,6 +2,7 @@ package ru.geekbrains;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -17,6 +18,7 @@ import ru.geekbrains.service.ProductService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Controller
@@ -30,24 +32,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-//    @GetMapping ("")
-//    public String allProducts(Model model) {
-//        model.addAttribute("products", productRepository.getAllProducts());
-//        return "products";
-//    }
-    @GetMapping
-    public String allProducts(Model model) {
-        List<Product> productList = productService.getAllProducts();
-        if (productList.size() <= 20 ) {
-            Random objGenerator = new Random();
-            for (int i = productList.size(); i <=20 ; i++) {
-                Product product = new Product("product" + i, new BigDecimal(objGenerator.nextInt(100)));
-                productService.insert(product);
-            }
-        }
-        model.addAttribute("products", productList);
-        return "products";
-    }
 
     @GetMapping(params = {"id"})
     public String findById(Model model,@RequestParam(name = "id") Long id) {
@@ -55,39 +39,34 @@ public class ProductController {
         return "products";
     }
 
-    @GetMapping(params = {"minPrice","maxPrice"})
-    public String findByMaxMinPrice(Model model,@RequestParam(name = "minPrice") BigDecimal minPrice, @RequestParam(name = "maxPrice") BigDecimal maxPrice) {
-        if ( maxPrice != null & minPrice != null) {
-            model.addAttribute("products", productService.findByPriceMinMax(minPrice, maxPrice));
-        } else if (minPrice != null) {
-            model.addAttribute("products", productService.findByPriceMin(minPrice));
-        } else if (maxPrice != null ) {
-            model.addAttribute("products", productService.findByPriceMax(maxPrice));
-        } else {
-            model.addAttribute("products", productService.getAllProducts());
-        }
-        return "products";
-    }
-    @GetMapping(params = {"minPrice"})
-    public String findByMinPrice(Model model,@RequestParam(name = "minPrice") BigDecimal minPrice) {
-        model.addAttribute("products", productService.findByPriceMin(minPrice));
-        return "products";
-    }
-    @GetMapping(params = {"maxPrice"})
-    public String findByMaxPrice(Model model,@RequestParam(name = "maxPrice") BigDecimal maxPrice) {
-        model.addAttribute("products", productService.findByPriceMax(maxPrice));
+    @GetMapping()
+    public String allProducts(Model model,
+                                    @RequestParam(name = "minPrice") Optional<BigDecimal> minPrice,
+                                    @RequestParam(name = "maxPrice") Optional<BigDecimal> maxPrice,
+                                    @RequestParam(value = "page") Optional<Integer> page,
+                                    @RequestParam(value = "size") Optional<Integer> size) {
+        model.addAttribute("activePage", "Products");
+        model.addAttribute("productsPage", productService.allProducts(
+                minPrice, maxPrice,
+                PageRequest.of(page.orElse(1) - 1, size.orElse(25))
+        ));
+        model.addAttribute("minPrice", minPrice.orElse(null));
+        model.addAttribute("maxPrice", maxPrice.orElse(null));
         return "products";
     }
 
+
     @GetMapping("/form")
-    public String formProduct(Model model) {
-        model.addAttribute("product", new Product());
+    public String formProduct(Model model,
+                              @RequestParam(name = "id") Optional<Long> id) {
+        model.addAttribute("activePage", "Products");
+        model.addAttribute("product", productService.editOrAddProduct(id));
         return "product_form";
     }
 
     @PostMapping("/form_add")
     public String newProduct(Product product) {
-        productService.insert(product);
+        productService.insertOrUpdate(product);
         return "redirect:/products";
     }
 }

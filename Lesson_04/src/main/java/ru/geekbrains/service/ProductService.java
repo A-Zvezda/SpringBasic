@@ -1,8 +1,11 @@
 package ru.geekbrains.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.geekbrains.persist.Person;
 import ru.geekbrains.persist.Product;
 import ru.geekbrains.persist.ProductRepository;
 
@@ -21,8 +24,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void insert(Product product) {
-        productRepository.save(product);
+    public void insertOrUpdate(Product product) {
+        Optional<Product> foundedProduct = productRepository.findById(product.getId());
+        if (foundedProduct.isPresent()) {
+            productRepository.save(product);
+        } else {
+            productRepository.save(product);
+        }
     }
 
     @Transactional
@@ -41,21 +49,28 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<Product> findByPriceMinMax(BigDecimal minPrice, BigDecimal maxPrice) {
-        return productRepository.findByPriceMinMax(minPrice,maxPrice);
-    }
-    @Transactional(readOnly = true)
-    public List<Product> findByPriceMin(BigDecimal minPrice) {
-        return productRepository.findByPriceMin(minPrice);
-    }
-    @Transactional(readOnly = true)
-    public List<Product> findByPriceMax(BigDecimal maxPrice) {
-        return productRepository.findByPriceMax(maxPrice);
+    public Page<Product> allProducts(Optional<BigDecimal> min, Optional<BigDecimal> max, Pageable pageable) {
+        if (min.isPresent() && max.isPresent()) {
+            return productRepository.findAllByCostBetween(min.get(), max.get(), pageable);
+        }
+        if (min.isPresent()) {
+            return productRepository.findAllByCostGreaterThanEqual(min.get(), pageable);
+        }
+        if (max.isPresent()) {
+            return productRepository.findAllByCostLessThanEqual(max.get(), pageable);
+        }
+        return productRepository.findAll(pageable);
     }
 
-
-//    public List<Person> findAllWithPagination() {
-//       return personRepository.findAllWithPagination(PageRequest.of(1, 5));
-//    }
-
+    @Transactional
+    public Optional<Product> editOrAddProduct(Optional <Long> id) {
+        if (id.isPresent()) {
+            return productRepository.findById(id.get());
+        } else {
+            Product product = new Product();
+            Optional<Product> opt = Optional.ofNullable(product);
+            return opt;
+        }
+    }
 }
+

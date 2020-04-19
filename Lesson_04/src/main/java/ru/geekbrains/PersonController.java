@@ -1,6 +1,7 @@
 package ru.geekbrains;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +13,7 @@ import ru.geekbrains.persist.Person;
 import ru.geekbrains.service.PersonService;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/person")
@@ -25,23 +26,30 @@ public class PersonController {
         this.personService = personService;
     }
 
-//    @GetMapping(params = {"minPrice","maxPrice"})
-//    public String allPersons(@RequestParam("minPrice") BigDecimal minPrice,
-//                             @RequestParam("maxPrice") BigDecimal maxPrice,
-//                             Model model) {
-//        model.addAttribute("persons", personService.getAllPersons());
-//        return "persons";
-//    }
-
-    @GetMapping
-    public String allPersons(Model model) {
-        model.addAttribute("persons", personService.getAllPersons());
+    @GetMapping()
+    public String allPersons(@RequestParam(value = "minAge") Optional<Integer> minAge,
+                             @RequestParam(value = "maxAge") Optional<Integer> maxAge,
+                             @RequestParam(value = "page") Optional<Integer> page,
+                             @RequestParam(value = "size") Optional<Integer> size,
+                             Model model) {
+        model.addAttribute("activePage", "Persons");
+        model.addAttribute("personPage", personService.findAllByAgeBetween(
+                minAge, maxAge,
+                PageRequest.of(page.orElse(1) - 1, size.orElse(5))
+        ));
+        model.addAttribute("minAge", minAge.orElse(null));
+        model.addAttribute("maxAge", maxAge.orElse(null));
         return "persons";
     }
 
     @GetMapping("/form")
-    public String formPerson(Model model) {
-        model.addAttribute("person", new Person());
+    public String formPerson(@RequestParam(value = "id") Optional<Long> personId,
+                             Model model) {
+        if (personId.isPresent()) {
+            model.addAttribute("person", personService.findById(personId.get()));
+        } else {
+            model.addAttribute("person", new Person());
+        }
         return "person_form";
     }
 
@@ -51,7 +59,7 @@ public class PersonController {
             return "person_form";
         }
 
-        personService.insert(person);
+        personService.save(person);
         return "redirect:/person";
     }
 }
