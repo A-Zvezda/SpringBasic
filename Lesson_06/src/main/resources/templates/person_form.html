@@ -12,6 +12,7 @@
 <h1>Person</h1>
 
 <form th:action="@{/person/form}" th:object="${person}" method="post">
+    <input th:type="hidden" th:field="*{id}">
     <p>First Name:</p>
     <p><input type="text" th:field="*{firstName}"></p>
     <p>Last Name:</p>

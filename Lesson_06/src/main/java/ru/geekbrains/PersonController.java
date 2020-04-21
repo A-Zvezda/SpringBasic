@@ -5,10 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.Person;
 import ru.geekbrains.service.PersonService;
 
@@ -26,7 +23,7 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String allPersons(@RequestParam(value = "minAge") Optional<Integer> minAge,
                              @RequestParam(value = "maxAge") Optional<Integer> maxAge,
                              @RequestParam(value = "page") Optional<Integer> page,
@@ -42,14 +39,15 @@ public class PersonController {
         return "persons";
     }
 
+    @GetMapping("/{id}")
+    public String editPerson(@PathVariable(value = "id") Long id, Model model) {
+        model.addAttribute("person", personService.findById(id));
+        return "person_form";
+    }
+
     @GetMapping("/form")
-    public String formPerson(@RequestParam(value = "id") Optional<Long> personId,
-                             Model model) {
-        if (personId.isPresent()) {
-            model.addAttribute("person", personService.findById(personId.get()));
-        } else {
-            model.addAttribute("person", new Person());
-        }
+    public String formPerson(Model model) {
+        model.addAttribute("person", new Person());
         return "person_form";
     }
 

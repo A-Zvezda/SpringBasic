@@ -32,7 +32,9 @@
                     </tr>
 
                     <tr th:if="${personPage.hasContent()}" th:each="person : ${personPage.content}">
-                        <td th:text="${person.firstName}">FN</td>
+                        <td>
+                            <a th:text="${person.firstName}" th:href="@{/person/{id}(id = ${person.id})}">FN</a>
+                        </td>
                         <td th:text="${person.lastName}">LN</td>
                         <td th:text="${person.age}">12</td>
                         <td th:text="${person.email}">email</td>
