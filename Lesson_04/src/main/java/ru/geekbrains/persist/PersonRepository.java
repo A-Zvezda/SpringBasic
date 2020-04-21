@@ -1,5 +1,6 @@
 package ru.geekbrains.persist;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,9 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query("from Person p where p.firstName = :firstName")
     List<Person> filterPersonByName(@Param("firstName") String firstName);
 
-    // TODO примерный вид запроса с пагинацией
-   // List<Person> findAllWithPagination(Pageable pageable);
+    Page<Person> findAllByAgeBetween(Integer min, Integer max, Pageable pageable);
+
+    Page<Person> findAllByAgeGreaterThanEqual(Integer min, Pageable pageable);
+
+    Page<Person> findAllByAgeLessThanEqual(Integer max, Pageable pageable);
 }

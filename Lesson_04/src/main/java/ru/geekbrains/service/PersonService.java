@@ -1,6 +1,7 @@
 package ru.geekbrains.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,7 @@ public class PersonService {
     }
 
     @Transactional
-    public void insert(Person person) {
-        personRepository.save(person);
-    }
-
-    @Transactional
-    public void update(Person person) {
+    public void save(Person person) {
         personRepository.save(person);
     }
 
@@ -41,7 +37,21 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-//    public List<Person> findAllWithPagination() {
-//       return personRepository.findAllWithPagination(PageRequest.of(1, 5));
-//    }
+    @Transactional(readOnly = true)
+    public Page<Person> findAll(Pageable pageable) {
+        return personRepository.findAll(pageable);
+    }
+
+    public Page<Person> findAllByAgeBetween(Optional<Integer> min, Optional<Integer> max, Pageable pageable) {
+        if (min.isPresent() && max.isPresent()) {
+            return personRepository.findAllByAgeBetween(min.get(), max.get(), pageable);
+        }
+        if (min.isPresent()) {
+            return personRepository.findAllByAgeGreaterThanEqual(min.get(), pageable);
+        }
+        if (max.isPresent()) {
+            return personRepository.findAllByAgeLessThanEqual(max.get(), pageable);
+        }
+        return personRepository.findAll(pageable);
+    }
 }

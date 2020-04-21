@@ -1,5 +1,7 @@
 package ru.geekbrains.persist;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,14 +13,9 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("from Product p where p.cost between :minPrice and :maxPrice")
-    List<Product> findByPriceMinMax(@Param("minPrice") BigDecimal minPrice, @Param("maxPrice")BigDecimal maxPrice);
+    Page<Product> findAllByCostBetween(BigDecimal min, BigDecimal max, Pageable pageable);
 
-    @Query("from Product p where p.cost < :minPrice")
-    List<Product> findByPriceMin(@Param("minPrice") BigDecimal minPrice);
+    Page<Product> findAllByCostGreaterThanEqual(BigDecimal min, Pageable pageable);
 
-    @Query("from Product p where p.cost > :maxPrice")
-    List<Product> findByPriceMax(@Param("maxPrice") BigDecimal minPrice);
-
-
+    Page<Product> findAllByCostLessThanEqual(BigDecimal max, Pageable pageable);
 }
