@@ -1,0 +1,78 @@
+table {
+    margin: auto;
+    width: 600px;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+th {
+    height: 50px;
+}
+
+
+.header {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 90%; /* Full width */
+    margin-top:10px;
+}
+.header a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.header a:hover {
+    background: #ddd;
+    color: black;
+}
+.header a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+.content {
+    padding-top: 20px;
+    width: 100%;
+}
+.page {
+    width: 90%;
+    margin: 30px auto;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.footer {
+    border-top: solid black 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    align-items: center;
+    text-align: right;
+    padding-bottom: 5px;
+
+}
