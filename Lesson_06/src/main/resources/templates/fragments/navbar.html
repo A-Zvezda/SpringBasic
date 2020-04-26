@@ -1,0 +1,7 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="navbar" class = "header">
+        <a th:href="@{/person}", th:classappend="${activePage == 'Persons' } ? 'active'">Persons</a>
+        <a th:href="@{/products}" , th:classappend="${activePage == 'Products' } ? 'active'">Products</a>
+        <a th:href="@{/order}" , th:classappend="${activePage == 'Orders' } ? 'active'">Orders</a>
+</div>
+</html>

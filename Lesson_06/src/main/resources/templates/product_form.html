@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/resources/style.css}">
+    <title>Product</title>
+</head>
+<body>
+<div class="page">
+    <nav th:replace="fragments/navbar.html :: navbar"/>
+    <div class="content">
+        <h1>Product</h1>
+
+        <form th:action="@{/products/form_add}" th:object="${product}" method="post">
+            <p>ID:</p>
+            <p><input type="text" th:field="*{id}" readonly></p>
+            <p>Title:</p>
+            <p><input type="text" th:field="*{title}"></p>
+            <p>Cost:</p>
+            <p><input type="text" th:field="*{cost}"></p>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+    <footer th:replace="fragments/footer.html :: footer"/>
+</div>
+</body>
+</html>
