@@ -1,8 +1,6 @@
 package ru.geekbrains.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.Person;
 import ru.geekbrains.service.PersonService;
@@ -27,15 +25,14 @@ public class PersonResource {
 
     @GetMapping(path = "/{id}/id", produces = "application/json")
     public Person findById(@PathVariable("id") long id) {
-        return personService.findById(id);
-        //  return personService.findById(id)
-        //        .orElseThrow(NotFoundException::new);
+        return personService.findById(id)
+                .orElseThrow(() -> new NotFoundException ("Person not found"));
     }
 
     @PostMapping
     public void createPerson(@RequestBody Person person) {
-        if (person.getId() != null) {
-            throw new IllegalArgumentException("Id field found in create request");
+        if (personService.findById(person.getId()).isPresent()) {
+            throw new AlreadyExistException("Id field found in create request");
         }
         personService.save(person);
     }
@@ -50,13 +47,13 @@ public class PersonResource {
         personService.deleteById(id);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> notFoundExceptionHandler(NotFoundException exception) {
-        return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> illegalArgumentException(IllegalArgumentException exception) {
-        return new ResponseEntity<>(exception.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<String> notFoundExceptionHandler(NotFoundException exception) {
+//        return new ResponseEntity<>("Not found", HttpStatus.NOT_FOUND);
+//    }
+//
+//    @ExceptionHandler
+//    public ResponseEntity<String>  illegalArgumentException(IllegalArgumentException exception) {
+//        return new ResponseEntity<>(exception.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
+//    }
 }

@@ -42,6 +42,11 @@ public class PersonService {
         return personRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public List<Person> findAll() {
+        return personRepository.findAll();
+    }
+
     public Page<Person> findAllByAgeBetween(Optional<Integer> min, Optional<Integer> max, Pageable pageable) {
         if (min.isPresent() && max.isPresent()) {
             return personRepository.findAllByAgeBetween(min.get(), max.get(), pageable);
@@ -53,5 +58,10 @@ public class PersonService {
             return personRepository.findAllByAgeLessThanEqual(max.get(), pageable);
         }
         return personRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        personRepository.deleteById(id);
     }
 }

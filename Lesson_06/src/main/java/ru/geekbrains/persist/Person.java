@@ -8,7 +8,7 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column
     private String firstName;
@@ -33,7 +33,7 @@ public class Person {
         this.age = age;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

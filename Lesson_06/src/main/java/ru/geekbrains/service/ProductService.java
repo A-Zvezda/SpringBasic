@@ -72,5 +72,14 @@ public class ProductService {
             return opt;
         }
     }
+
+    @Transactional
+    public void deleteById(long id) {
+        productRepository.deleteById(id);
+    }
+
+    public List<Product> findAll() {
+        return productRepository.findAll();
+    }
 }
 
