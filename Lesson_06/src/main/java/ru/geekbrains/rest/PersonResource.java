@@ -1,5 +1,6 @@
 package ru.geekbrains.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.Person;
@@ -39,11 +40,17 @@ public class PersonResource {
 
     @PutMapping
     public void updatePerson(@RequestBody Person person) {
-        personService.save(person);
+        if (personService.findById(person.getId()).isPresent()) {
+            personService.save(person);
+        } else {
+            throw new BadRequestException ("Person not found by ID and couldn't be saved ");
+        }
     }
 
     @DeleteMapping(path = "/{id}/id", produces = "application/json")
     public void deletePerson(@PathVariable("id") long id) {
+        personService.findById(id)
+                .orElseThrow(() -> new BadRequestException ("Person not found by ID and couldn't be deleted "));
         personService.deleteById(id);
     }
 

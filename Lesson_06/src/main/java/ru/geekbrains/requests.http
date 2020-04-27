@@ -58,10 +58,11 @@ POST http://localhost:8080/app/api/v1/person
 Content-Type: application/json
 
 {
+  "id": 123,
   "firstName": "fromRest",
   "lastName": "restFrom",
   "email": "aaa@bbb.cc",
-  "age": 12
+  "age": 14
 }
 
 ###
