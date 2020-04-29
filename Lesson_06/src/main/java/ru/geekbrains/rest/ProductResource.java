@@ -1,6 +1,7 @@
 package ru.geekbrains.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.Product;
 import ru.geekbrains.service.ProductService;
@@ -29,6 +30,7 @@ public class  ProductResource{
                 .orElseThrow(() -> new NotFoundException ("Product not found"));
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping
     public void createProduct (@RequestBody Product product) {
         if (productService.findById(product.getId()).isPresent()) {
@@ -37,11 +39,13 @@ public class  ProductResource{
         productService.insertOrUpdate(product);
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PutMapping
     public void updateProduct(@RequestBody Product product) {
         productService.insertOrUpdate(product);
     }
 
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/{id}/id", produces = "application/json")
     public void deleteProduct(@PathVariable("id") long id) {
         productService.deleteById(id);

@@ -1,7 +1,17 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="navbar" class = "header">
         <a th:href="@{/person}", th:classappend="${activePage == 'Persons' } ? 'active'">Persons</a>
         <a th:href="@{/products}" , th:classappend="${activePage == 'Products' } ? 'active'">Products</a>
         <a th:href="@{/order}" , th:classappend="${activePage == 'Orders' } ? 'active'">Orders</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/user}" , th:classappend="${activePage == 'User' } ? 'active'">User</a>
+
+        <form sec:authorize="isAuthenticated()" th:action="@{logout}" method="post">
+                <button type="submit">Logout <span sec:authentication="principal.username"></span></button>
+        </form>
+
+        <a sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
+
+
 </div>
 </html>
