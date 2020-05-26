@@ -75,3 +75,35 @@ Content-Type: application/json
   "cost": 123.00
 }
 ###
+
+POST http://localhost:8080/app/api/v1/person
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "firstName": "fromRest",
+  "lastName": "restFrom",
+  "email": "aaa@bbb.cc",
+  "age": 12
+}
+
+###
+
+# curl -u admin:password  http://localhost:8080/app/api/v1/person/all
+GET http://localhost:8080/app/api/v1/person/all
+Authorization: Basic user user
+
+###
+
+POST http://localhost:8080/app/api/v1/person
+Authorization: Basic user user
+Content-Type: application/json
+
+{
+  "firstName": "fromRest",
+  "lastName": "restFrom",
+  "email": "aaa@bbb.cc",
+  "age": 12
+}
+
+###

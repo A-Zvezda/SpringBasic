@@ -2,6 +2,7 @@ package ru.geekbrains.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.persist.Person;
 import ru.geekbrains.service.PersonService;
@@ -30,6 +31,7 @@ public class PersonResource {
                 .orElseThrow(() -> new NotFoundException ("Person not found"));
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping
     public void createPerson(@RequestBody Person person) {
         if (personService.findById(person.getId()).isPresent()) {
@@ -38,6 +40,7 @@ public class PersonResource {
         personService.save(person);
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PutMapping
     public void updatePerson(@RequestBody Person person) {
         if (personService.findById(person.getId()).isPresent()) {
@@ -46,7 +49,7 @@ public class PersonResource {
             throw new BadRequestException ("Person not found by ID and couldn't be saved ");
         }
     }
-
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping(path = "/{id}/id", produces = "application/json")
     public void deletePerson(@PathVariable("id") long id) {
         personService.findById(id)
